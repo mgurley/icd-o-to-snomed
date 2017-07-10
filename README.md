@@ -90,69 +90,62 @@ ORDER BY code, tty
 	 * This loads the maps table with ICD-O 3.1 codes paired with a corresponding SNOMED code via the 'ICD-O simple map reference set (foundation metadata concept) 446608001'.  SNOMED has made known that refset 445508001 maps to an unreleased version of ICD-O 3.2 via ICD-11.
 	 * Here is some SQL to analyze the axis to axis mappings:
 	 ```
-List all ICD-O 3.1 Site codes
-select  m.icdo3_axis, s.icdo3_code, s.name, m.snomed_code, m.refsetid
-from sites s left join maps m on s.icdo3_code = m.icdo3_code and m.icdo3_axis = 'site' and m.refsetid = '446608001'
-where s.level = '4'
-order by s.icdo3_code
-   ```
-   ```
-List all unmapped ICD-O 3.1 Site codes: 43
-select s.icdo3_code, s.name, count(m.snomed_code) as     snomed_code_map_count
-from sites s left join maps m on s.icdo3_code = m.icdo3_code and m.icdo3_axis = 'site' and m.refsetid = '446608001'
-where s.level = '4'
-group by s.name, s.icdo3_code
-having count(m.snomed_code) = 0
-order by s.icdo3_code
-   ```
-   ```
-List all ICD-O 3.1 Site codes mapped to one SNOMED code: 4
-select s.icdo3_code, s.name, count(m.snomed_code) as snomed_code_map_count
-from sites s left join maps m on s.icdo3_code = m.icdo3_code and m.icdo3_axis = 'site' and m.refsetid = '446608001'
-where s.level = '4'
-group by s.name, s.icdo3_code
-having count(m.snomed_code) = 1
-order by s.icdo3_code
-   ```
-   ```
-List all ICD-O 3.1 Site codes mapped more than one SNOMED code: 283
-select s.icdo3_code, s.name, count(m.snomed_code) as snomed_code_map_count
-from sites s left join maps m on s.icdo3_code = m.icdo3_code and m.icdo3_axis = 'site' and m.refsetid = '446608001'
-where s.level = '4'
-group by s.name, s.icdo3_code
-having count(m.snomed_code) > 1
-order by s.icdo3_code
-   ```
-   ```
-List all ICD-O 3.1 Histology codes
-select  m.icdo3_axis, h.icdo3_code, h.name, m.snomed_code, m.refsetid
-from histologies h left join maps m on h.icdo3_code = m.icdo3_code and m.icdo3_axis = 'histology' and m.refsetid = '446608001'
-order by h.icdo3_code
-   ```
-   ```
-List all unmapped ICD-O 3.1 Histology codes: 13
-select h.name, h.icdo3_code, count(m.snomed_code) as snomed_code_map_count
-from histologies h left join maps m on h.icdo3_code = m.icdo3_code and m.icdo3_axis = 'histology' and m.refsetid = '446608001'
-group by h.name, h.icdo3_code
-having count(m.snomed_code) = 0
-order by h.icdo3_code
-   ```
-   ```
-List all ICD-O 3.1 Histology codes mapped to one SNOMED code: 854
-select h.name, h.icdo3_code, count(m.snomed_code) as snomed_code_map_count
-from histologies h left join maps m on h.icdo3_code = m.icdo3_code and m.icdo3_axis = 'histology' and m.refsetid = '446608001'
-group by h.name, h.icdo3_code
-having count(m.snomed_code) = 1
-order by h.icdo3_code
-   ```
-   ```
-List all ICD-O 3.1 Histology codes mapped more than one SNOMED code: 198
-select h.name, h.icdo3_code, count(m.snomed_code) as snomed_code_map_count
-from histologies h left join maps m on h.icdo3_code = m.icdo3_code and m.icdo3_axis = 'histology' and m.refsetid = '446608001'
-group by h.name, h.icdo3_code
-having count(m.snomed_code) > 1
-order by h.icdo3_code
-   ```
+         /* List all ICD-O 3.1 Site codes */
+         select  m.icdo3_axis, s.icdo3_code, s.name, m.snomed_code, m.refsetid
+         from sites s left join maps m on s.icdo3_code = m.icdo3_code and m.icdo3_axis = 'site' and m.refsetid = '446608001'
+         where s.level = '4'
+         order by s.icdo3_code
+
+         /* List all unmapped ICD-O 3.1 Site codes: 43 */
+         select s.icdo3_code, s.name, count(m.snomed_code) as     snomed_code_map_count
+         from sites s left join maps m on s.icdo3_code = m.icdo3_code and m.icdo3_axis = 'site' and m.refsetid = '446608001'
+         where s.level = '4'
+         group by s.name, s.icdo3_code
+         having count(m.snomed_code) = 0
+         order by s.icdo3_code
+
+	 /* List all ICD-O 3.1 Site codes mapped to one SNOMED code: 4 */
+         select s.icdo3_code, s.name, count(m.snomed_code) as snomed_code_map_count
+         from sites s left join maps m on s.icdo3_code = m.icdo3_code and m.icdo3_axis = 'site' and m.refsetid = '446608001'
+         where s.level = '4'
+         group by s.name, s.icdo3_code
+         having count(m.snomed_code) = 1
+         order by s.icdo3_code
+
+	 /* List all ICD-O 3.1 Site codes mapped more than one SNOMED code: 283 */
+	 select s.icdo3_code, s.name, count(m.snomed_code) as snomed_code_map_count
+ 	 from sites s left join maps m on s.icdo3_code = m.icdo3_code and m.icdo3_axis = 'site' and m.refsetid = '446608001'
+	 where s.level = '4'
+	 group by s.name, s.icdo3_code
+	 having count(m.snomed_code) > 1
+	 order by s.icdo3_code
+
+	 /* List all ICD-O 3.1 Histology codes */
+         select  m.icdo3_axis, h.icdo3_code, h.name, m.snomed_code, m.refsetid
+         from histologies h left join maps m on h.icdo3_code = m.icdo3_code and m.icdo3_axis = 'histology' and m.refsetid = '446608001'
+         order by h.icdo3_code
+
+	 /* List all unmapped ICD-O 3.1 Histology codes: 13 */
+         select h.name, h.icdo3_code, count(m.snomed_code) as snomed_code_map_count
+         from histologies h left join maps m on h.icdo3_code = m.icdo3_code and m.icdo3_axis = 'histology' and m.refsetid = '446608001'
+         group by h.name, h.icdo3_code
+         having count(m.snomed_code) = 0
+         order by h.icdo3_code
+
+	 /*List all ICD-O 3.1 Histology codes mapped to one SNOMED code: 854 */
+         select h.name, h.icdo3_code, count(m.snomed_code) as snomed_code_map_count
+	 from histologies h left join maps m on h.icdo3_code = m.icdo3_code and m.icdo3_axis = 'histology' and m.refsetid = '446608001'
+         group by h.name, h.icdo3_code
+         having count(m.snomed_code) = 1
+         order by h.icdo3_code
+
+         /* List all ICD-O 3.1 Histology codes mapped more than one SNOMED code: 198 */
+         select h.name, h.icdo3_code, count(m.snomed_code) as snomed_code_map_count
+         from histologies h left join maps m on h.icdo3_code = m.icdo3_code and m.icdo3_axis = 'histology' and m.refsetid = '446608001'
+         group by h.name, h.icdo3_code
+         having count(m.snomed_code) > 1
+         order by h.icdo3_code
+         ```
    * 69,824 SNOMED Disease (disorders) have a pre-coordinated relationship via the 'Finding Site' attribute relationship and an 'Associated Morphology' attribute relationship.
 	   * Here is some SQL to list the SNOMED precoordinations:
 	   ```
