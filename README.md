@@ -104,7 +104,7 @@ ORDER BY code, tty
          having count(m.snomed_code) = 0
          order by s.icdo3_code
 
-	       /* List all ICD-O 3.1 Site codes mapped to one SNOMED code: 4 */
+         /* List all ICD-O 3.1 Site codes mapped to one SNOMED code: 4 */
          select s.icdo3_code, s.name, count(m.snomed_code) as snomed_code_map_count
          from sites s left join maps m on s.icdo3_code = m.icdo3_code and m.icdo3_axis = 'site' and m.refsetid = '446608001'
          where s.level = '4'
@@ -113,28 +113,28 @@ ORDER BY code, tty
          order by s.icdo3_code
 
          /* List all ICD-O 3.1 Site codes mapped more than one SNOMED code: 283 */
-	       select s.icdo3_code, s.name, count(m.snomed_code) as snomed_code_map_count
- 	       from sites s left join maps m on s.icdo3_code = m.icdo3_code and m.icdo3_axis = 'site' and m.refsetid = '446608001'
-	       where s.level = '4'
-	       group by s.name, s.icdo3_code
-	       having count(m.snomed_code) > 1
-	       order by s.icdo3_code
+         select s.icdo3_code, s.name, count(m.snomed_code) as snomed_code_map_count
+         from sites s left join maps m on s.icdo3_code = m.icdo3_code and m.icdo3_axis = 'site' and m.refsetid = '446608001'
+         where s.level = '4'
+         group by s.name, s.icdo3_code
+         having count(m.snomed_code) > 1
+         order by s.icdo3_code
 
-	       /* List all ICD-O 3.1 Histology codes */
+         /* List all ICD-O 3.1 Histology codes */
          select  m.icdo3_axis, h.icdo3_code, h.name, m.snomed_code, m.refsetid
          from histologies h left join maps m on h.icdo3_code = m.icdo3_code and m.icdo3_axis = 'histology' and m.refsetid = '446608001'
          order by h.icdo3_code
 
-	       /* List all unmapped ICD-O 3.1 Histology codes: 13 */
+         /* List all unmapped ICD-O 3.1 Histology codes: 13 */
          select h.name, h.icdo3_code, count(m.snomed_code) as snomed_code_map_count
          from histologies h left join maps m on h.icdo3_code = m.icdo3_code and m.icdo3_axis = 'histology' and m.refsetid = '446608001'
          group by h.name, h.icdo3_code
          having count(m.snomed_code) = 0
          order by h.icdo3_code
 
-	       /*List all ICD-O 3.1 Histology codes mapped to one SNOMED code: 854 */
+         /* List all ICD-O 3.1 Histology codes mapped to one SNOMED code: 854 */
          select h.name, h.icdo3_code, count(m.snomed_code) as snomed_code_map_count
-	       from histologies h left join maps m on h.icdo3_code = m.icdo3_code and m.icdo3_axis = 'histology' and m.refsetid = '446608001'
+         from histologies h left join maps m on h.icdo3_code = m.icdo3_code and m.icdo3_axis = 'histology' and m.refsetid = '446608001'
          group by h.name, h.icdo3_code
          having count(m.snomed_code) = 1
          order by h.icdo3_code
