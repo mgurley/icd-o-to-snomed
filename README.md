@@ -42,7 +42,7 @@ AND code like '%/%'
 ORDER BY code, tty
    ```
    *  Save the results of this SQL to lib/setup/data/icd_o_31_histologies.csv
-   *  Here is some SQL to extract ICD-O 3.1 histology synonyms from the NCI Metathesaurus
+   *  Here is some SQL to extract ICD-O 3.1 histology synonyms from the NCI Metathesaurus:
 
    ```
 SELECT code AS icdo3_histology_code
@@ -74,8 +74,8 @@ ORDER BY code, tty
    ```
       bundle exec rake setup:sites_who
    ```
-   * This loads the sites and site_synonyms tables from the file lib/setup/Topoenglish.txt.  This file was obtained from WHO at the link above.  There were no changes in the sites axis of ICD-O between versions 3 and and 3.1.
-   * Load valid combinations of site and histology based on the ICD-O-3 SEER Site/Histology Validation List obtained here: https://seer.cancer.gov/icd-o-3/.  This Excel Validation List has been saved at lib/setup/data/sitetype.icdo3.d20150918.xls.  A CSV version of the Validation List has been saved at lib/setup/data/sitetype.icdo3.d20150918.csv.  Run the following rake task to load parse the SEER file:
+   * This loads the sites and site_synonyms tables from the file lib/setup/data/Topoenglish.txt.  This file was obtained from WHO at the link above.  There were no changes in the sites axis of ICD-O between versions 3 and and 3.1.
+   * Load valid combinations of site and histology based on the ICD-O-3 SEER Site/Histology Validation List obtained here: https://seer.cancer.gov/icd-o-3/.  This Excel Validation List has been saved at lib/setup/data/sitetype.icdo3.d20150918.xls.  A CSV version of the Validation List has been saved at lib/setup/data/sitetype.icdo3.d20150918.csv.  Run the following rake task to parse the SEER file:
    ```
       bundle exec rake setup:seer_site_histology_validation_list
    ```
@@ -85,7 +85,8 @@ ORDER BY code, tty
 	   * ICD-O 3.1 site axis to "Body Structure (body structure) | Anatomical or acquired body structure (body structure)"
 	   * Run the following rake task load the ICD-O 3.1 axis to SNOMED axis mappings :
    ```
-      bundle exec rake setup:icd_o_3_axis_to_snomed_axis_map
+bundle exec rake setup:icd_o_3_axis_to_snomed_axis_map
+
    ```
 	   *  This loads the maps table with ICD-O 3.1 codes paired with a corresponding SNOMED code via the 'ICD-O simple map reference set (foundation metadata concept) 446608001'.  SNOMED has made known that refset 445508001 maps to an unreleased version of ICD-O 3.2 via ICD-11.
 	   * Here is some SQL to analyze the axis to axis mappings:
