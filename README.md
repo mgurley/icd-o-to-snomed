@@ -20,7 +20,7 @@ Some code to perform mappings from ICD-O to SNOMED.
 * The applications assumes it is pointed to a SNOMED CT database loaded into PostgreSQL.  See config/database.yml for database connection information.
 * Install the Rails bundle
 ```
-bundle install
+bundle exec install
 ```
 * Migrate the custom tables:
 ```
@@ -83,7 +83,7 @@ ORDER BY code, tty
    ```
       bundle exec rake setup:seer_site_histology_validation_list
    ```
-   * This loads the seer_valid_icdo3_site_histology_combinations table with valid combinations for malignant tumors and non-primary CNS benign tumors.   It also saves the combinations to a file at lib/setup/data_out/seer_valid_icdo3_site_histology_combinations.csv.
+   * This loads the seer_valid_icdo3_site_histology_combinations table with valid combinations for malignant tumors and Primary CNS benign tumors.   It also saves the combinations to a file at lib/setup/data_out/seer_valid_icdo3_site_histology_combinations.csv.
    * Load ICD-O 3.1 axis to SNOMED axis mappings.
 	   * ICD-O 3.1 histology axis to "Body Structure (body structure) | Body structure, altered from its original anatomical structure (morphologic abnormality)"
 	   * ICD-O 3.1 site axis to "Body Structure (body structure) | Anatomical or acquired body structure (body structure)"
