@@ -147,7 +147,7 @@ ORDER BY code, tty
          order by h.icdo3_code
           ```
    * 69,824 SNOMED Disease (disorders) have a pre-coordinated relationship via the 'Finding Site' attribute relationship and an 'Associated Morphology' attribute relationship.
-    * Here is some SQL to list the SNOMED precoordinations:
+     * Here is some SQL to list the SNOMED precoordinations:
      ```
         SELECT  distinct  d.conceptid
               , r.destinationid AS histology_destinationid
@@ -181,95 +181,95 @@ ORDER BY code, tty
         )
         order by d.conceptid
 	      ```
-    *  Here is some SQL to list all the precoordinated SNOMED Disease (disorders)  that can be mapped to valid SEER ICD-O 3.1 site/histology combinations:
-    ```
-/* 1915 non-unique SEER site/histology combinations can be mapped to precoordinated  SNOMED Disease (disorders), 975 unique combinations*/
-with icd_o_to_snomed_site_maps  as (
-select referencedcomponentid
-     , refsetid
-     , active
-     , maptarget
-from curr_simplemaprefset_f map
-where map.refsetid = '446608001'
-and map.active = '1'
-and maptarget like '%C%'
-and not exists(
-select 1
-from curr_simplemaprefset_f map2
-where map.moduleid = map2.moduleid
-and map.refsetid = map2.refsetid
-and map.referencedcomponentid = map2.referencedcomponentid
-and map2.effectivetime > map.effectivetime
-)
-),
-icd_o_to_snomed_histology_maps  as (
-select referencedcomponentid
-     , refsetid
-     , active
-     , maptarget
-from curr_simplemaprefset_f map
-where map.refsetid = '446608001'
-and map.active = '1'
-and maptarget like '%/%'
-and not exists(
-select 1
-from curr_simplemaprefset_f map2
-where map.moduleid = map2.moduleid
-and map.refsetid = map2.refsetid
-and map.referencedcomponentid = map2.referencedcomponentid
-and map2.effectivetime > map.effectivetime
-)
-)
-SELECT  distinct  d.conceptid
-      , r2.destinationid AS site_destinationid
-      , r.destinationid AS histology_destinationid
-      , icd_o_to_snomed_histology_maps.maptarget as histology_icdo_3_code
-      , icd_o_to_snomed_site_maps.maptarget as site_icdo_3_code
-      , seer_valid_icdo3_site_histology_combinations.icdo3_site_code
-      , seer_valid_icdo3_site_histology_combinations.icdo3_histology_code
-FROM curr_description_f d
-join curr_relationship_f r on d.conceptid = r.sourceid and r.active = '1' and r.typeid = '116676008' -- "Associated morphology (attribute)"
-join curr_relationship_f r2 on d.conceptid = r2.sourceid and r2.active = '1' and r2.typeid = '363698007' and r.relationshipgroup = r2.relationshipgroup -- "Finding site (attribute)"
-left join icd_o_to_snomed_histology_maps on r.destinationid =  icd_o_to_snomed_histology_maps.referencedcomponentid
-left join icd_o_to_snomed_site_maps on r2.destinationid =  icd_o_to_snomed_site_maps.referencedcomponentid
-left join seer_valid_icdo3_site_histology_combinations on seer_valid_icdo3_site_histology_combinations.icdo3_site_code = icd_o_to_snomed_site_maps.maptarget and seer_valid_icdo3_site_histology_combinations.icdo3_histology_code = icd_o_to_snomed_histology_maps.maptarget
-where d.typeid = '900000000000003001'
-and d.active = '1'
-and not exists(
-select 1
-from curr_relationship_f r3
-where r.moduleid = r3.moduleid
-and r.sourceid = r3.sourceid
-and r.relationshipgroup = r3.relationshipgroup
-and r.typeid = r3.typeid
---and r.characteristictypeid = r3.characteristictypeid
---and r.modifierid = r3.modifierid
-and r3.effectivetime > r.effectivetime
-)
-and not exists(
-select 1
-from curr_relationship_f r4
-where r2.moduleid = r4.moduleid
-and r2.sourceid = r4.sourceid
-and r2.relationshipgroup = r4.relationshipgroup
-and r2.typeid = r4.typeid
---and r2.characteristictypeid = r4.characteristictypeid
---and r2.modifierid = r4.modifierid
-and r4.effectivetime > r2.effectivetime
-)
-and exists(
-select 1
-from icd_o_to_snomed_histology_maps
-where r.destinationid =  icd_o_to_snomed_histology_maps.referencedcomponentid
-)
-and exists(
-select 1
-from icd_o_to_snomed_site_maps
-where r2.destinationid =  icd_o_to_snomed_site_maps.referencedcomponentid
-)
-and seer_valid_icdo3_site_histology_combinations.icdo3_site_code is not null
-and seer_valid_icdo3_site_histology_combinations.icdo3_histology_code is not null
-order by icd_o_to_snomed_histology_maps.maptarget, icd_o_to_snomed_site_maps.maptarget
+     *  Here is some SQL to list all the precoordinated SNOMED Disease (disorders)  that can be mapped to valid SEER ICD-O 3.1 site/histology combinations:
+     ```
+        /* 1915 non-unique SEER site/histology combinations can be mapped to precoordinated  SNOMED Disease (disorders), 975 unique combinations*/
+        with icd_o_to_snomed_site_maps  as (
+        select referencedcomponentid
+             , refsetid
+             , active
+             , maptarget
+        from curr_simplemaprefset_f map
+        where map.refsetid = '446608001'
+        and map.active = '1'
+        and maptarget like '%C%'
+        and not exists(
+        select 1
+        from curr_simplemaprefset_f map2
+        where map.moduleid = map2.moduleid
+        and map.refsetid = map2.refsetid
+        and map.referencedcomponentid = map2.referencedcomponentid
+        and map2.effectivetime > map.effectivetime
+        )
+        ),
+        icd_o_to_snomed_histology_maps  as (
+        select referencedcomponentid
+             , refsetid
+             , active
+             , maptarget
+        from curr_simplemaprefset_f map
+        where map.refsetid = '446608001'
+        and map.active = '1'
+        and maptarget like '%/%'
+        and not exists(
+        select 1
+        from curr_simplemaprefset_f map2
+        where map.moduleid = map2.moduleid
+        and map.refsetid = map2.refsetid
+        and map.referencedcomponentid = map2.referencedcomponentid
+        and map2.effectivetime > map.effectivetime
+        )
+        )
+        SELECT  distinct  d.conceptid
+              , r2.destinationid AS site_destinationid
+              , r.destinationid AS histology_destinationid
+              , icd_o_to_snomed_histology_maps.maptarget as histology_icdo_3_code
+              , icd_o_to_snomed_site_maps.maptarget as site_icdo_3_code
+              , seer_valid_icdo3_site_histology_combinations.icdo3_site_code
+              , seer_valid_icdo3_site_histology_combinations.icdo3_histology_code
+        FROM curr_description_f d
+        join curr_relationship_f r on d.conceptid = r.sourceid and r.active = '1' and r.typeid = '116676008' -- "Associated morphology (attribute)"
+        join curr_relationship_f r2 on d.conceptid = r2.sourceid and r2.active = '1' and r2.typeid = '363698007' and r.relationshipgroup = r2.relationshipgroup -- "Finding site (attribute)"
+        left join icd_o_to_snomed_histology_maps on r.destinationid =  icd_o_to_snomed_histology_maps.referencedcomponentid
+        left join icd_o_to_snomed_site_maps on r2.destinationid =  icd_o_to_snomed_site_maps.referencedcomponentid
+        left join seer_valid_icdo3_site_histology_combinations on seer_valid_icdo3_site_histology_combinations.icdo3_site_code = icd_o_to_snomed_site_maps.maptarget and seer_valid_icdo3_site_histology_combinations.icdo3_histology_code = icd_o_to_snomed_histology_maps.maptarget
+        where d.typeid = '900000000000003001'
+        and d.active = '1'
+        and not exists(
+        select 1
+        from curr_relationship_f r3
+        where r.moduleid = r3.moduleid
+        and r.sourceid = r3.sourceid
+        and r.relationshipgroup = r3.relationshipgroup
+        and r.typeid = r3.typeid
+        --and r.characteristictypeid = r3.characteristictypeid
+        --and r.modifierid = r3.modifierid
+        and r3.effectivetime > r.effectivetime
+        )
+        and not exists(
+        select 1
+        from curr_relationship_f r4
+        where r2.moduleid = r4.moduleid
+        and r2.sourceid = r4.sourceid
+        and r2.relationshipgroup = r4.relationshipgroup
+        and r2.typeid = r4.typeid
+        --and r2.characteristictypeid = r4.characteristictypeid
+        --and r2.modifierid = r4.modifierid
+        and r4.effectivetime > r2.effectivetime
+        )
+        and exists(
+        select 1
+        from icd_o_to_snomed_histology_maps
+        where r.destinationid =  icd_o_to_snomed_histology_maps.referencedcomponentid
+        )
+        and exists(
+        select 1
+        from icd_o_to_snomed_site_maps
+        where r2.destinationid =  icd_o_to_snomed_site_maps.referencedcomponentid
+        )
+        and seer_valid_icdo3_site_histology_combinations.icdo3_site_code is not null
+        and seer_valid_icdo3_site_histology_combinations.icdo3_histology_code is not null
+        order by icd_o_to_snomed_histology_maps.maptarget, icd_o_to_snomed_site_maps.maptarget
    ```
     *  It might be possible select a single SNOMED code appropriate for each ICD-O 3.1 code if the multiple mappings could role up to single code within the SNOMED hierarchy via the "Is a (attribute)" relationship.  Here is some SQL that might help with analyzing this possibility:
 
