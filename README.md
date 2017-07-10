@@ -180,7 +180,7 @@ ORDER BY code, tty
         and r4.effectivetime > r2.effectivetime
         )
         order by d.conceptid
-	      ```
+        ```
      *  Here is some SQL to list all the precoordinated SNOMED Disease (disorders)  that can be mapped to valid SEER ICD-O 3.1 site/histology combinations:
      ```
         /* 1915 non-unique SEER site/histology combinations can be mapped to precoordinated  SNOMED Disease (disorders), 975 unique combinations*/
@@ -270,45 +270,44 @@ ORDER BY code, tty
         and seer_valid_icdo3_site_histology_combinations.icdo3_site_code is not null
         and seer_valid_icdo3_site_histology_combinations.icdo3_histology_code is not null
         order by icd_o_to_snomed_histology_maps.maptarget, icd_o_to_snomed_site_maps.maptarget
-   ```
+        ```
     *  It might be possible select a single SNOMED code appropriate for each ICD-O 3.1 code if the multiple mappings could role up to single code within the SNOMED hierarchy via the "Is a (attribute)" relationship.  Here is some SQL that might help with analyzing this possibility:
-
+    ```
+      with icd_o_to_snomed_site_maps  as (
+      select referencedcomponentid
+      , refsetid
+      , active
+      , maptarget
+      from curr_simplemaprefset_f map
+      where map.refsetid = '446608001'
+      and map.active = '1'
+      and maptarget like '%C%'
+      and not exists(
+      select 1
+      from curr_simplemaprefset_f map2
+      where map.moduleid = map2.moduleid
+      and map.refsetid = map2.refsetid
+      and map.referencedcomponentid = map2.referencedcomponentid
+      and map2.effectivetime > map.effectivetime
+      )
+      )
+      --'C01.9'
+      --'C00.4'
+      select *
+      from icd_o_to_snomed_site_maps m1 join curr_relationship_f r on r.sourceid = m1.referencedcomponentid and r.active = '1'and r.typeid in('116680003')
+                                        join icd_o_to_snomed_site_maps m2 on r.destinationid = m2.referencedcomponentid
+      where m1.maptarget = 'C01.9'
+      and m2.maptarget = 'C01.9'
+      and not exists(
+      select 1
+      from curr_relationship_f r2
+      where r.moduleid = r2.moduleid
+      and r.sourceid = r2.sourceid
+      and r.relationshipgroup = r2.relationshipgroup
+      and r.typeid = r2.typeid
+      --and r.characteristictypeid = r2.characteristictypeid
+      --and r.modifierid = r2.modifierid
+      and r2.effectivetime > r.effectivetime
+      )
+      order by r.sourceid, r.destinationid
       ```
-with icd_o_to_snomed_site_maps  as (
-select referencedcomponentid
-, refsetid
-, active
-, maptarget
-from curr_simplemaprefset_f map
-where map.refsetid = '446608001'
-and map.active = '1'
-and maptarget like '%C%'
-and not exists(
-select 1
-from curr_simplemaprefset_f map2
-where map.moduleid = map2.moduleid
-and map.refsetid = map2.refsetid
-and map.referencedcomponentid = map2.referencedcomponentid
-and map2.effectivetime > map.effectivetime
-)
-)
---'C01.9'
---'C00.4'
-select *
-from icd_o_to_snomed_site_maps m1 join curr_relationship_f r on r.sourceid = m1.referencedcomponentid and r.active = '1'and r.typeid in('116680003')
-                                  join icd_o_to_snomed_site_maps m2 on r.destinationid = m2.referencedcomponentid
-where m1.maptarget = 'C01.9'
-and m2.maptarget = 'C01.9'
-and not exists(
-select 1
-from curr_relationship_f r2
-where r.moduleid = r2.moduleid
-and r.sourceid = r2.sourceid
-and r.relationshipgroup = r2.relationshipgroup
-and r.typeid = r2.typeid
---and r.characteristictypeid = r2.characteristictypeid
---and r.modifierid = r2.modifierid
-and r2.effectivetime > r.effectivetime
-)
-order by r.sourceid, r.destinationid
-   ```
