@@ -145,43 +145,42 @@ ORDER BY code, tty
          group by h.name, h.icdo3_code
          having count(m.snomed_code) > 1
          order by h.icdo3_code
-         ```
+          ```
    * 69,824 SNOMED Disease (disorders) have a pre-coordinated relationship via the 'Finding Site' attribute relationship and an 'Associated Morphology' attribute relationship.
-	   * Here is some SQL to list the SNOMED precoordinations:
-	   ```
-SELECT  distinct  d.conceptid
-      , r.destinationid AS histology_destinationid
-      , r2.destinationid AS site_destinationid
-FROM curr_description_f d
-join curr_relationship_f r on d.conceptid = r.sourceid and r.active = '1' and r.typeid = '116676008' -- "Associated morphology (attribute)"
-join curr_relationship_f r2 on d.conceptid = r2.sourceid and r2.active = '1' and r2.typeid = '363698007' and r.relationshipgroup = r2.relationshipgroup -- "Finding site (attribute)"
-where d.typeid = '900000000000003001'
-and d.active = '1'
-and not exists(
-select 1
-from curr_relationship_f r3
-where r.moduleid = r3.moduleid
-and r.sourceid = r3.sourceid
-and r.relationshipgroup = r3.relationshipgroup
-and r.typeid = r3.typeid
---and r.characteristictypeid = r3.characteristictypeid
---and r.modifierid = r3.modifierid
-and r3.effectivetime > r.effectivetime
-)
-and not exists(
-select 1
-from curr_relationship_f r4
-where r2.moduleid = r4.moduleid
-and r2.sourceid = r4.sourceid
-and r2.relationshipgroup = r4.relationshipgroup
-and r2.typeid = r4.typeid
---and r2.characteristictypeid = r4.characteristictypeid
---and r2.modifierid = r4.modifierid
-and r4.effectivetime > r2.effectivetime
-)
-order by d.conceptid
-
-	  ```
+    * Here is some SQL to list the SNOMED precoordinations:
+     ```
+        SELECT  distinct  d.conceptid
+              , r.destinationid AS histology_destinationid
+              , r2.destinationid AS site_destinationid
+        FROM curr_description_f d
+        join curr_relationship_f r on d.conceptid = r.sourceid and r.active = '1' and r.typeid = '116676008' -- "Associated morphology (attribute)"
+        join curr_relationship_f r2 on d.conceptid = r2.sourceid and r2.active = '1' and r2.typeid = '363698007' and r.relationshipgroup = r2.relationshipgroup -- "Finding site (attribute)"
+        where d.typeid = '900000000000003001'
+        and d.active = '1'
+        and not exists(
+        select 1
+        from curr_relationship_f r3
+        where r.moduleid = r3.moduleid
+        and r.sourceid = r3.sourceid
+        and r.relationshipgroup = r3.relationshipgroup
+        and r.typeid = r3.typeid
+        --and r.characteristictypeid = r3.characteristictypeid
+        --and r.modifierid = r3.modifierid
+        and r3.effectivetime > r.effectivetime
+        )
+        and not exists(
+        select 1
+        from curr_relationship_f r4
+        where r2.moduleid = r4.moduleid
+        and r2.sourceid = r4.sourceid
+        and r2.relationshipgroup = r4.relationshipgroup
+        and r2.typeid = r4.typeid
+        --and r2.characteristictypeid = r4.characteristictypeid
+        --and r2.modifierid = r4.modifierid
+        and r4.effectivetime > r2.effectivetime
+        )
+        order by d.conceptid
+	      ```
     *  Here is some SQL to list all the precoordinated SNOMED Disease (disorders)  that can be mapped to valid SEER ICD-O 3.1 site/histology combinations:
     ```
 /* 1915 non-unique SEER site/histology combinations can be mapped to precoordinated  SNOMED Disease (disorders), 975 unique combinations*/
