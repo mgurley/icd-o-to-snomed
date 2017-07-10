@@ -84,6 +84,7 @@ ORDER BY code, tty
 	   * ICD-O 3.1 histology axis to "Body Structure (body structure) | Body structure, altered from its original anatomical structure (morphologic abnormality)"
 	   * ICD-O 3.1 site axis to "Body Structure (body structure) | Anatomical or acquired body structure (body structure)"
 	   * Run the following rake task load the ICD-O 3.1 axis to SNOMED axis mappings :
+
      ```
 bundle exec rake setup:icd_o_3_axis_to_snomed_axis_map
 
