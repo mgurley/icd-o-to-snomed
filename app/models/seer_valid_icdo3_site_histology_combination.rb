@@ -1,0 +1,2 @@
+class SeerValidIcdo3SiteHistologyCombination < ApplicationRecord
+end

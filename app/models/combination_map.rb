@@ -1,0 +1,2 @@
+class CombinationMap < ApplicationRecord
+end
