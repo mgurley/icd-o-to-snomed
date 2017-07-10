@@ -20,7 +20,7 @@ Some code to perform mappings from ICD-O to SNOMED.
 * The applications assumes it is pointed to a SNOMED CT database loaded into PostgreSQL.  See config/database.yml for database connection information.
 * Install the Rails bundle
 ```
-bundle exec install
+bundle install
 ```
 * Migrate the custom tables:
 ```
